@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -47,11 +51,58 @@ namespace S3Operations
 
             // Start TODO 5: create a object by transferring the file to the S3 bucket,
             // set the contentType of the file and add any metadata passed to this function.
+            var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), name);
+
+            try
+            {
+
+                var putObjectRequest = new PutObjectRequest
+                {
+                    Key = name,
+                    BucketName = bucketName,
+                    ContentType = contentType,
+                    FilePath = filePath,
+                };
+                foreach (var item in metadata)
+                {
+                    putObjectRequest.Metadata.Add(item.Key, item.Value);
+                }
+
+                var response = await s3Client.PutObjectAsync(putObjectRequest);
+                Console.WriteLine($"{response.ETag}");
+                var bytes = File.ReadAllBytes(filePath);
+                var hashString = CalculateMD5Hash(bytes);
+                if (response.ETag.Trim('"') != hashString)
+                {
+                    Console.WriteLine($"File {filePath}  upload failed.Etag Received {response.ETag}. Etag Sent {hashString}");
+                }
+            }
+            catch (AmazonS3Exception ex)
+            {
+
+                Console.WriteLine($"File {filePath}  upload to S3 failed. {ex.Message}");
+            }
 
 
             // End TODO 5
 
             Console.WriteLine("Finished creating object");
+
+
+
+        }
+
+
+        public static string CalculateMD5Hash(byte[] bytes)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(bytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("x2"));
+            }
+            return sb.ToString();
         }
     }
 }
