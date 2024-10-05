@@ -10,3 +10,9 @@ Check if bucket has been created
 
 aws s3 ls notes-bucket-867146013
 
+Command to return the matched bucket
+ bucket=$(aws s3 ls | grep -Eo notes-bucket-[0-9]+) && echo $bucket
+List the existing objects
+aws s3 ls s3://notes-bucket-867146013/notes.csv
+Display the content of notes.csv file
+"aws s3 cp s3://notes-bucket-867146013/notes.csv -"
