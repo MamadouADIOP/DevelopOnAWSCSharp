@@ -1,2 +1,12 @@
 Commands
 Mes commandes
+Commands to find and replace bucket name
+V3 version
+(Get-Content C:\code\appsettings.json).Replace('NOTES_BUCKET_NAME', 'notes-bucket-867146013') | Set-Content C:\code\appsettings.json
+
+V2 version
+(Get-Content C:\code\appsettings.json) -replace 'NOTES_BUCKET_NAME', 'notes-bucket-867146013' | Set-Content C:\code\appsettings.json
+Check if bucket has been created
+
+aws s3 ls notes-bucket-867146013
+
