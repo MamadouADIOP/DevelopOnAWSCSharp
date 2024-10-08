@@ -1,26 +1,3 @@
-Commands
-Mes commandes
-Commands to find and replace bucket name
-V3 version
-(Get-Content C:\code\appsettings.json).Replace('NOTES_BUCKET_NAME', 'notes-bucket-867146013') | Set-Content C:\code\appsettings.json
-
-V2 version
-(Get-Content C:\code\appsettings.json) -replace 'NOTES_BUCKET_NAME', 'notes-bucket-867146013' | Set-Content C:\code\appsettings.json
-Check if bucket has been created
-
-aws s3 ls notes-bucket-867146013
-
-Command to return the matched bucket
- bucket=$(aws s3 ls | grep -Eo notes-bucket-[0-9]+) && echo $bucket
-List the existing objects
-aws s3 ls s3://notes-bucket-867146013/notes.csv
-Display the content of notes.csv file
-"aws s3 cp s3://notes-bucket-867146013/notes.csv -"
-Search and replace text in file
-sed -i  "s/notes-bucket-867146013/notes-bucket-983285438/g" ./appsettings.json `
-
-
-
 {
     "AWS::CloudFormation::Init": {
         "config": {
@@ -42,14 +19,4 @@ sed -i  "s/notes-bucket-867146013/notes-bucket-983285438/g" ./appsettings.json `
             }
         }
     }
-}Return bucket region
-aws s3api get-bucket-location --bucket notes-bucket-983285438
-
-Search bucket key with given name
-
-aws s3 ls | grep -e 'notes-bucket-[0-9]*'
-
-Search for all child objects
-
-aws s3 ls s3://notes-bucket-983285439
-
+}

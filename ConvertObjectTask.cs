@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Amazon.S3;
@@ -57,10 +58,13 @@ namespace S3Operations
 
             // Start TODO 6: Download the file contents to the
             // contents object so that it can be decoded to a string.
-
-
-            // End TODO 6
-
+            var getObjectRequest = new GetObjectRequest { BucketName = bucketName, Key = name};
+            var response = await s3Client.GetObjectAsync(getObjectRequest);
+            Console.WriteLine($"The returned object {name} etag is {response.ETag}");
+            using (var reader =new StreamReader(response.ResponseStream))
+            {
+                contents =  await reader.ReadToEndAsync();
+            }
             return contents;
         }
 
@@ -84,7 +88,13 @@ namespace S3Operations
                 request.Metadata.Add(key, metadata[key]);
             }           
             // Start TODO 7: Create an Amazon S3 object with the converted data
-
+            var response = await s3Client.PutObjectAsync(request);
+            var bytes = Encoding.UTF8.GetBytes(data);
+            var hashString = MD5HashComputer.CalculateMD5Hash(bytes);
+            if (response.ETag.Trim('"') != hashString)
+            {
+                Console.WriteLine($"File  upload failed.Etag Received {response.ETag}. Etag Sent {hashString}");
+            }
             // End TODO 7
 
             Console.WriteLine("Successfully created object");

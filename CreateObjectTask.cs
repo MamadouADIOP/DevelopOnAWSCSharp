@@ -53,6 +53,8 @@ namespace S3Operations
             // set the contentType of the file and add any metadata passed to this function.
             var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), name);
 
+
+
             try
             {
 
@@ -71,7 +73,7 @@ namespace S3Operations
                 var response = await s3Client.PutObjectAsync(putObjectRequest);
                 Console.WriteLine($"{response.ETag}");
                 var bytes = File.ReadAllBytes(filePath);
-                var hashString = CalculateMD5Hash(bytes);
+                var hashString = MD5HashComputer.CalculateMD5Hash(bytes);
                 if (response.ETag.Trim('"') != hashString)
                 {
                     Console.WriteLine($"File {filePath}  upload failed.Etag Received {response.ETag}. Etag Sent {hashString}");
@@ -93,16 +95,5 @@ namespace S3Operations
         }
 
 
-        public static string CalculateMD5Hash(byte[] bytes)
-        {
-            MD5 md5 = MD5.Create();
-            byte[] hash = md5.ComputeHash(bytes);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                sb.Append(hash[i].ToString("x2"));
-            }
-            return sb.ToString();
-        }
     }
 }
