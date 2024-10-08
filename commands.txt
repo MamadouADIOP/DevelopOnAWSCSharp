@@ -89,3 +89,6 @@ http://notes-bucket-983285439.s3-website-ap-south-1.amazonaws.com
 
 "`nYou can now access the website at:`nhttp://$mybucket.s3-website.$myRegion.amazonaws.com`n`n"
 http://notes-bucket-983285439.s3-website.ap-south-1.amazonaws.com
+
+Get bucket lcoation
+aws s3api get-bucket-location --bucket notes-bucket-926635732

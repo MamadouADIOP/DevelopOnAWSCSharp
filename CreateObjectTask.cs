@@ -22,7 +22,8 @@ namespace S3Operations
             try
             {
                 using var s3Client = new AmazonS3Client();
-
+                var region = s3Client.Config.RegionEndpoint;
+                Console.WriteLine($"\nCreating bucket object in {region.DisplayName} ({region.SystemName})");
                 // Create object in the Amazon S3 bucket
                 await UploadObject(s3Client,
                                    configSettings.BucketName,
