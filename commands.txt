@@ -80,4 +80,4 @@ aws s3api put-bucket-policy --bucket notes-bucket-983285438 --policy file://poli
 http://notes-bucket-983285439.s3-website.ap-south-1.amazonaws.com/
 
 User powershell to get region
- = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/placement/region
+$region = Invoke-RestMethod -uri http://169.254.169.254/latest/meta-data/placement/region
