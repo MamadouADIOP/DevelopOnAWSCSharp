@@ -82,7 +82,7 @@ namespace S3Operations
                 ContentBody = data,
                 ContentType = contentType
             };
-
+            
             foreach (var key in metadata.Keys)
             {
                 request.Metadata.Add(key, metadata[key]);
