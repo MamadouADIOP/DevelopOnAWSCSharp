@@ -61,3 +61,9 @@ Create website using aws s3
 aws s3 website s3://notes-bucket-983285439  --index-document index.html --error-document error.html
 Host static website in the s3 bucket
  aws s3api put-bucket-website --bucket notes-bucket-983285439 --website-configuration file://website.json
+command Search and replace [BUCKET] by bucket name 
+sed -i "s/\[BUCKET\]/notes-bucket-983285438/" policy.json
+
+Command to search and replace [BUCKET] with bucket name 
+(Get-Content policy.json).Replace('[BUCKET]', '<bucketname>')|Set-Content policy.json
+
