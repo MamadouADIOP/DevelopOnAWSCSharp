@@ -76,3 +76,6 @@ aws s3api put-public-access-block        --bucket notes-bucket-983285438        
 Command to apply policy to the website
 aws s3api put-bucket-policy --bucket notes-bucket-983285438 --policy file://policy.json
 
+
+http://notes-bucket-983285439.s3-website.ap-south-1.amazonaws.com/
+
