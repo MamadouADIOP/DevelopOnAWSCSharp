@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -50,12 +51,19 @@ namespace S3Operations
                 var key = obj.Item1;
                 var filename = System.IO.Path.Join(Environment.CurrentDirectory, "html/", key);
                 var contentType = obj.Item2;
-
+               
                 Console.WriteLine($"Upload: html/{key} to s3://{bucketName}/{key}");
-
                 // Start TODO 8: Upload file to the bucket
-
-
+                var putObjectRequest = new PutObjectRequest { BucketName = bucketName, Key = key, ContentType = contentType, FilePath = filename };
+                Console.WriteLine($"Upload: html/{key} to s3://{bucketName}/{key}");
+                var response = await s3Client.PutObjectAsync(putObjectRequest);
+                var bytes = File.ReadAllBytes(filename);
+                var hashString = MD5HashComputer.CalculateMD5Hash(bytes);
+               
+                if (response.ETag.Trim('"') != hashString)
+                {
+                    Console.WriteLine($"File {filename}  upload failed.Etag Received {response.ETag}. Etag Sent {hashString}");
+                }
                 // End TODO 8
             }
         }
@@ -64,8 +72,9 @@ namespace S3Operations
         {
             // Start TODO 9: enable an Amazon S3 web hosting using the objects you uploaded in the last method
             // as the index and error document for the website.
-
-            
+            var websiteConfiguration = new WebsiteConfiguration { ErrorDocument = "error.html", IndexDocumentSuffix = "index.html" };
+            var response = await s3Client.PutBucketWebsiteAsync(bucketName, websiteConfiguration);
+             
             // End TODO 9
         }
 
@@ -84,8 +93,13 @@ namespace S3Operations
 
             // Start TODO 10: Apply the provided bucket policy to the website bucket
             // to allow your objects to be accessed from the internet.
-
-
+            var publicAccessBlockConfiguration = new PublicAccessBlockConfiguration { RestrictPublicBuckets = false, BlockPublicPolicy = false };
+            var putPublicAccessBlockRequest = new PutPublicAccessBlockRequest { PublicAccessBlockConfiguration = publicAccessBlockConfiguration, BucketName = bucketName };
+            
+            var response = await s3Client.PutPublicAccessBlockAsync(putPublicAccessBlockRequest);
+            var putBucketPolicyRequest = new PutBucketPolicyRequest { BucketName = bucketName, Policy = bucketPolicy };
+            var response1 = await s3Client.PutBucketPolicyAsync(putBucketPolicyRequest);
+            
             // End TODO 10
         }
 

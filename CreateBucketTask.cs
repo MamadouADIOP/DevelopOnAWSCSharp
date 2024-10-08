@@ -21,7 +21,7 @@ namespace S3Operations
 
                 // TODO 1: Create an Amazon S3 client to interact with the service
 
-                s3Client = new AmazonS3Client(region: Amazon.RegionEndpoint.APSouth1);
+                s3Client = new AmazonS3Client();
 
                 // End TODO1
 
