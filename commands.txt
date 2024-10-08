@@ -67,3 +67,12 @@ sed -i "s/\[BUCKET\]/notes-bucket-983285438/" policy.json
 Command to search and replace [BUCKET] with bucket name 
 (Get-Content policy.json).Replace('[BUCKET]', '<bucketname>')|Set-Content policy.json
 
+Command to put-bucket-policy
+
+ aws s3api put-bucket-policy --bucket notes-bucket-983285438 --policy file://policy.json
+
+Update public access block
+aws s3api put-public-access-block        --bucket notes-bucket-983285438        --public-access-block-configuration "BlockPublicPolicy=false"
+Command to apply policy to the website
+aws s3api put-bucket-policy --bucket notes-bucket-983285438 --policy file://policy.json
+
